@@ -74,6 +74,8 @@ def clean_rich(h):
     h = re.sub(r'\s*class="wixui-rich-text__text"', "", h)
     h = re.sub(r'\s*(wixui-rich-text__text)', "", h)
     h = re.sub(r'<a href="mailto:[^"]*"[^>]*>(.*?)</a>', lambda m: m.group(1), h)
+    # 원본 CV에 복사·붙여넣기로 딸려 온 네이버 사전 링크 제거 (글자는 유지)
+    h = re.sub(r'<a href="https?://[^"]*dict\.naver\.com[^"]*"[^>]*>(.*?)</a>', lambda m: m.group(1), h, flags=re.S)
     h = re.sub(r'href="([^"]+)"', lambda m: 'href="%s"' % H.escape(local_href(H.unescape(m.group(1)))), h)
     return map_fonts(h)
 
