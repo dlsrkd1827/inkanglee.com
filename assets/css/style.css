@@ -1,9 +1,17 @@
 /* LEE IN KANG — site styles
    원본(Wix) 테마 값을 그대로 옮김. Wix 전용 유료 폰트(Helvetica W01, FB네오고딕)는
-   맥에서는 Helvetica Neue, 그 외에는 Inter / Noto Sans KR 로 대체. */
+   맥에서는 Helvetica Neue, 그 외에는 Inter Tight / Noto Sans KR 로 대체.
+
+   화면 구간
+   ① 1340px 이상  : 원본 Wix 데스크톱 980px 그리드 (main.d). 왼쪽 메뉴와 안 겹치게 그리드를 오른쪽으로 민다.
+   ② 1000~1339px  : 왼쪽 메뉴 + 본문 한 줄 흐름 (main.d)
+   ③ 768~999px    : 상단 Menu 버튼 + 본문 한 줄 흐름 (main.d) — 태블릿
+   ④ 767px 이하   : 원본 Wix 모바일 그대로 (main.m, 320px 그리드, 햄버거 메뉴) — 폰
+                    폰에서는 head 의 스크립트가 viewport 를 width=320 으로 바꿔 원본처럼 확대된다. */
 :root {
   --sans: "Helvetica Neue", "Inter Tight", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   --serif: "EB Garamond", "Noto Serif KR", serif;
+  --kr: "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; /* 원본 모바일 메뉴의 FB네오고딕 대체 */
 
   /* Wix 테마 색 */
   --color_11: 255,255,255;
@@ -31,17 +39,18 @@ body {
 }
 img, video, iframe, svg { display: block; }
 a { color: inherit; }
+[hidden] { display: none !important; }
 
-/* ---------- 왼쪽 고정 메뉴 ---------- */
-nav {
+/* ---------- 데스크톱 왼쪽 고정 메뉴 ---------- */
+#site-nav {
   position: fixed;
   top: 20px;
   left: 20px;
   z-index: 50;
 }
-nav ul { list-style: none; margin: 0; padding: 0; }
-nav li { position: relative; }
-nav a {
+#site-nav ul { list-style: none; margin: 0; padding: 0; }
+#site-nav li { position: relative; }
+#site-nav a {
   display: block;
   line-height: 35px;
   font-size: 15px;
@@ -51,22 +60,24 @@ nav a {
   white-space: nowrap;
   transition: color .2s;
 }
-nav a:hover, nav li:hover > a, nav a[aria-current="page"] { color: var(--nav-hover); }
-nav .home > a { color: var(--nav-muted); }
-nav .sub {
+#site-nav a:hover, #site-nav li:hover > a, #site-nav a[aria-current="page"] { color: var(--nav-hover); }
+#site-nav .home > a { color: var(--nav-muted); }
+#site-nav .sub {
   display: none;
   position: absolute;
   top: 0;
   left: 100%;
-  padding-left: 40px;
+  padding: 0 16px 0 40px;
+  background: rgba(255,255,255,.96);
 }
-nav .sub a { font-size: 14px; }
-nav .has-sub:hover > .sub,
-nav .has-sub:focus-within > .sub { display: block; }
+#site-nav .sub a { font-size: 14px; }
+#site-nav .has-sub:hover > .sub,
+#site-nav .has-sub:focus-within > .sub { display: block; }
 
 .menu-btn { display: none; }
+.m-burger, .m-menu, .m-top, main.m { display: none; }
 
-/* ---------- 홈 ---------- */
+/* ---------- 홈 배경 ---------- */
 .home-bg {
   position: fixed;
   left: 0;
@@ -76,9 +87,10 @@ nav .has-sub:focus-within > .sub { display: block; }
   z-index: -1;
   background: #f2f2f2 center / cover no-repeat;
 }
+.home-bg-m { display: none; }
 
-/* ---------- 작품 페이지 (Wix 메시 레이아웃 재현) ---------- */
-main { padding-bottom: 80px; }
+/* ---------- 작품 페이지 공통 (Wix 메시 레이아웃 재현) ---------- */
+main { padding-bottom: 80px; overflow-x: clip; }
 .wedge { visibility: hidden; width: 0; }
 .cell { min-width: 0; }
 .pic img, .pic a { width: 100%; height: 100%; }
@@ -102,52 +114,41 @@ main { padding-bottom: 80px; }
 .links { display: flex; gap: 16px; }
 .links img { width: 30px; height: 30px; }
 
-
-/* =====================================================================
-   반응형 구간
-   ① 1340px 이상  : 원본 Wix 980px 그리드 그대로. 단, 왼쪽 메뉴(약 300px)와
-                    겹치지 않도록 그리드 시작점을 최소 330px 오른쪽으로 민다.
-   ② 1000~1339px  : 왼쪽 메뉴 유지, 본문은 메뉴 오른쪽 한 줄 흐름(최대 760px)
-   ③ 999px 이하   : 상단 Menu 버튼, 본문 한 줄 흐름 (태블릿·폰)
-   ===================================================================== */
-main { overflow-x: clip; } /* 화면 밖으로 삐져나온 사진 때문에 가로 스크롤이 생기지 않게 */
-nav .sub { background: rgba(255,255,255,.96); padding-right: 16px; }
-
-/* ① 원본 그리드 */
+/* ① 원본 데스크톱 그리드 */
 @media (min-width: 1340px) {
-  main {
+  main.d {
     padding-top: 18px;
     /* 그리드 왼쪽 = (화면폭 + padding - 980) / 2 ≥ 340px */
     padding-left: max(0px, calc(1660px - 100vw));
   }
-  .mesh { display: grid; }
-  .cell { position: relative; }
+  main.d .mesh { display: grid; }
+  main.d .cell { position: relative; }
 }
 
-/* ②③ 공통: 한 줄 흐름 레이아웃 */
-@media (max-width: 1339px) {
-  .wedge, .vec { display: none; }
-  .mesh { display: flex; flex-direction: column; gap: 16px; }
-  .cell { width: auto !important; height: auto !important; }
-  .pic img { height: auto; }
-  .mesh > .pic { margin-inline: auto; width: 100% !important; }
-  .vid { aspect-ratio: 16 / 9; }
-  .box { padding: 12px; }
-  .txt [style*="font-size:60px"], .txt .font_3 { font-size: 30px !important; }
+/* ②③ 한 줄 흐름 레이아웃 */
+@media (min-width: 768px) and (max-width: 1339px) {
+  main.d .wedge, main.d .vec { display: none; }
+  main.d .mesh { display: flex; flex-direction: column; gap: 16px; }
+  main.d .cell { width: auto !important; height: auto !important; }
+  main.d .pic img { height: auto; }
+  main.d .mesh > .pic { margin-inline: auto; width: 100% !important; }
+  main.d .vid { aspect-ratio: 16 / 9; }
+  main.d .box { padding: 12px; }
+  main.d .txt [style*="font-size:60px"], main.d .txt .font_3 { font-size: 30px !important; }
 }
 
-/* ② 노트북·작은 모니터: 메뉴는 왼쪽 그대로 */
+/* ② 노트북·작은 모니터 */
 @media (min-width: 1000px) and (max-width: 1339px) {
-  main {
+  main.d {
     margin-left: 340px;
     max-width: 760px;
     padding: 38px 40px 80px 0;
   }
-  .mesh { gap: 20px; }
+  main.d .mesh { gap: 20px; }
 }
 
-/* ③ 태블릿·폰 */
-@media (max-width: 999px) {
+/* ③ 태블릿 */
+@media (min-width: 768px) and (max-width: 999px) {
   body { padding-top: 56px; }
   .menu-btn {
     position: fixed;
@@ -165,31 +166,150 @@ nav .sub { background: rgba(255,255,255,.96); padding-right: 16px; }
     justify-content: space-between;
   }
   .menu-btn::after { content: "LEE IN KANG"; color: var(--nav-muted); }
-  nav {
+  #site-nav {
     display: none;
     top: 56px; left: 0; right: 0; bottom: 0;
     padding: 8px 16px 32px;
     overflow-y: auto;
     background: #fff;
   }
-  body.menu-open nav { display: block; }
+  body.menu-open #site-nav { display: block; }
   body.menu-open { overflow: hidden; }
-  nav a { white-space: normal; line-height: 1.4; padding: 7px 0; }
-  nav .sub { display: none; position: static; padding-left: 16px; background: none; }
-  nav .has-sub.open > .sub, nav .has-sub:hover > .sub { display: block; }
+  #site-nav a { white-space: normal; line-height: 1.4; padding: 7px 0; }
+  #site-nav .sub { display: none; position: static; padding-left: 16px; background: none; }
+  #site-nav .has-sub.open > .sub, #site-nav .has-sub:hover > .sub { display: block; }
 
   .is-home { padding-top: 0; }
   .is-home .menu-btn { display: none; }
-  .is-home nav {
+  .is-home #site-nav {
     display: block;
     top: 0; left: 0; right: auto; bottom: auto;
-    max-width: calc(100% - 32px);
     padding: 16px 24px 20px 16px;
     background: rgba(255,255,255,.82);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
   }
 
-  main { max-width: 720px; margin: 0 auto; padding: 16px 16px 64px; }
-  .txt [style*="text-align:center"] { text-align: left !important; }
+  main.d { max-width: 720px; margin: 0 auto; padding: 16px 16px 64px; }
+  main.d .txt [style*="text-align:center"] { text-align: left !important; }
+}
+
+/* ④ 폰: 원본 Wix 모바일 (320px 기준) */
+@media (max-width: 767px) {
+  #site-nav, .menu-btn { display: none; }
+  .has-m main.d { display: none; }
+  main.m { display: block; padding: 50px 0 0; } /* 원본 모바일 헤더 높이 50px */
+  main.m .mesh { display: grid; }
+  main.m .cell { position: relative; }
+
+  /* 원본 모바일 홈 배경 (세로 이미지) */
+  .home-bg-d { display: none; }
+  .home-bg-m { display: block; top: 0; height: 100%; }
+
+  /* 햄버거 (회색 선 3개, 화면에 고정) */
+  .m-burger {
+    display: block;
+    position: fixed;
+    top: 11px; left: 0;
+    z-index: 70;
+    width: 50px; height: 50px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .m-burger span {
+    position: absolute;
+    left: 14px;
+    width: 22px; height: 2px;
+    background: rgb(var(--color_13));
+  }
+  .m-burger span:nth-child(1) { top: 15px; }
+  .m-burger span:nth-child(2) { top: 24px; }
+  .m-burger span:nth-child(3) { top: 33px; }
+
+  /* 전체 화면 메뉴 */
+  .m-menu {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    overflow-y: auto;
+    background: #fff;
+  }
+  .m-menu-bg {
+    position: fixed;
+    inset: 0;
+    background: center / cover no-repeat;
+    opacity: .23;
+    pointer-events: none;
+  }
+  .m-close {
+    position: fixed;
+    top: 11px; left: 0;
+    z-index: 2;
+    width: 50px; height: 50px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .m-close::before, .m-close::after {
+    content: "";
+    position: absolute;
+    top: 24px; left: 13px;
+    width: 24px; height: 1.5px;
+    background: rgb(var(--color_13));
+  }
+  .m-close::before { transform: rotate(45deg); }
+  .m-close::after { transform: rotate(-45deg); }
+  .m-menu nav { position: relative; padding: 13px 0 40px 34px; }
+  .m-menu ul { list-style: none; margin: 0; padding: 0; }
+  .m-menu li { position: relative; width: 188px; }
+  .m-menu a {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    font: 400 12px/40px var(--kr);
+    letter-spacing: .06em;
+    padding-left: 13px;
+    color: rgb(var(--color_15));
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .m-chev {
+    position: absolute;
+    top: 0; left: 138px;
+    width: 50px; height: 40px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: rgb(var(--color_15));
+    cursor: pointer;
+  }
+  .m-chev svg { width: 14px; height: 14px; margin: 0 auto; transition: transform .2s; }
+  .m-has-sub.open .m-chev svg { transform: rotate(180deg); }
+  .m-has-sub > ul { display: none; }
+  .m-has-sub.open > ul { display: block; }
+  .m-has-sub > a { padding-right: 50px; }
+  body.m-open { overflow: hidden; }
+
+  /* 맨 위로 버튼 (스크롤하면 나타남) */
+  .m-top {
+    display: block;
+    position: fixed;
+    left: 0; bottom: 87px;
+    z-index: 60;
+    width: 44px; height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+  .m-top svg { width: 44px; height: 44px; fill: rgba(0,0,0,.3); stroke: #fff; }
+  body.scrolled .m-top { opacity: 1; pointer-events: auto; }
 }
