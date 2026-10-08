@@ -1,0 +1,195 @@
+/* LEE IN KANG — site styles
+   원본(Wix) 테마 값을 그대로 옮김. Wix 전용 유료 폰트(Helvetica W01, FB네오고딕)는
+   맥에서는 Helvetica Neue, 그 외에는 Inter / Noto Sans KR 로 대체. */
+:root {
+  --sans: "Helvetica Neue", "Inter Tight", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  --serif: "EB Garamond", "Noto Serif KR", serif;
+
+  /* Wix 테마 색 */
+  --color_11: 255,255,255;
+  --color_12: 218,218,218;
+  --color_13: 151,149,149;
+  --color_14: 104,104,104;
+  --color_15: 43,43,43;
+  --color_45: 43,43,43;
+
+  --nav: rgb(var(--color_14));
+  --nav-muted: rgb(var(--color_13));
+  --nav-hover: #000;
+  --text: rgb(var(--color_15));
+  --bg: #fff;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 300 15px/1.4 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+img, video, iframe, svg { display: block; }
+a { color: inherit; }
+
+/* ---------- 왼쪽 고정 메뉴 ---------- */
+nav {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 50;
+}
+nav ul { list-style: none; margin: 0; padding: 0; }
+nav li { position: relative; }
+nav a {
+  display: block;
+  line-height: 35px;
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--nav);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .2s;
+}
+nav a:hover, nav li:hover > a, nav a[aria-current="page"] { color: var(--nav-hover); }
+nav .home > a { color: var(--nav-muted); }
+nav .sub {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  padding-left: 40px;
+}
+nav .sub a { font-size: 14px; }
+nav .has-sub:hover > .sub,
+nav .has-sub:focus-within > .sub { display: block; }
+
+.menu-btn { display: none; }
+
+/* ---------- 홈 ---------- */
+.home-bg {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: -10%;
+  height: 120%; /* 원본 Wix 설정: 배경 이미지 높이 120% */
+  z-index: -1;
+  background: #f2f2f2 center / cover no-repeat;
+}
+
+/* ---------- 작품 페이지 (Wix 메시 레이아웃 재현) ---------- */
+main { padding-bottom: 80px; }
+.wedge { visibility: hidden; width: 0; }
+.cell { min-width: 0; }
+.pic img, .pic a { width: 100%; height: 100%; }
+.pic img { object-fit: cover; }
+.vid iframe, .vid video { width: 100%; height: 100%; border: 0; background: #000; }
+.vec svg { width: 100%; height: 100%; }
+
+/* 리치 텍스트 */
+.txt { overflow-wrap: break-word; }
+.txt > div { font-size: 8px; line-height: 11px; } /* Wix가 텍스트 끝에 붙이는 빈 줄 */
+.txt p, .txt h1, .txt h2, .txt h3, .txt h4, .txt h5, .txt h6, .txt ul, .txt ol { margin: 0; }
+.txt ul, .txt ol { padding-left: 1.3em; }
+.txt a { color: inherit; }
+.font_0 { font: 400 17px/1.4em var(--serif); color: rgb(var(--color_45)); }
+.font_2 { font: 300 15px/1.4em var(--sans); color: rgb(var(--color_45)); }
+.font_3 { font: 400 60px/1.4em var(--sans); color: rgb(var(--color_45)); }
+.font_7 { font: 700 17px/1.4em var(--sans); color: rgb(var(--color_45)); }
+.font_8 { font: 300 15px/1.4em var(--sans); color: rgb(var(--color_15)); }
+.font_9 { font: 400 12px/1.4em var(--sans); color: rgb(var(--color_45)); }
+
+.links { display: flex; gap: 16px; }
+.links img { width: 30px; height: 30px; }
+
+
+/* =====================================================================
+   반응형 구간
+   ① 1340px 이상  : 원본 Wix 980px 그리드 그대로. 단, 왼쪽 메뉴(약 300px)와
+                    겹치지 않도록 그리드 시작점을 최소 330px 오른쪽으로 민다.
+   ② 1000~1339px  : 왼쪽 메뉴 유지, 본문은 메뉴 오른쪽 한 줄 흐름(최대 760px)
+   ③ 999px 이하   : 상단 Menu 버튼, 본문 한 줄 흐름 (태블릿·폰)
+   ===================================================================== */
+main { overflow-x: clip; } /* 화면 밖으로 삐져나온 사진 때문에 가로 스크롤이 생기지 않게 */
+nav .sub { background: rgba(255,255,255,.96); padding-right: 16px; }
+
+/* ① 원본 그리드 */
+@media (min-width: 1340px) {
+  main {
+    padding-top: 18px;
+    /* 그리드 왼쪽 = (화면폭 + padding - 980) / 2 ≥ 340px */
+    padding-left: max(0px, calc(1660px - 100vw));
+  }
+  .mesh { display: grid; }
+  .cell { position: relative; }
+}
+
+/* ②③ 공통: 한 줄 흐름 레이아웃 */
+@media (max-width: 1339px) {
+  .wedge, .vec { display: none; }
+  .mesh { display: flex; flex-direction: column; gap: 16px; }
+  .cell { width: auto !important; height: auto !important; }
+  .pic img { height: auto; }
+  .mesh > .pic { margin-inline: auto; width: 100% !important; }
+  .vid { aspect-ratio: 16 / 9; }
+  .box { padding: 12px; }
+  .txt [style*="font-size:60px"], .txt .font_3 { font-size: 30px !important; }
+}
+
+/* ② 노트북·작은 모니터: 메뉴는 왼쪽 그대로 */
+@media (min-width: 1000px) and (max-width: 1339px) {
+  main {
+    margin-left: 340px;
+    max-width: 760px;
+    padding: 38px 40px 80px 0;
+  }
+  .mesh { gap: 20px; }
+}
+
+/* ③ 태블릿·폰 */
+@media (max-width: 999px) {
+  body { padding-top: 56px; }
+  .menu-btn {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 60;
+    height: 56px;
+    padding: 0 16px;
+    border: 0;
+    background: rgba(255,255,255,.94);
+    font: 300 15px var(--sans);
+    color: var(--nav);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .menu-btn::after { content: "LEE IN KANG"; color: var(--nav-muted); }
+  nav {
+    display: none;
+    top: 56px; left: 0; right: 0; bottom: 0;
+    padding: 8px 16px 32px;
+    overflow-y: auto;
+    background: #fff;
+  }
+  body.menu-open nav { display: block; }
+  body.menu-open { overflow: hidden; }
+  nav a { white-space: normal; line-height: 1.4; padding: 7px 0; }
+  nav .sub { display: none; position: static; padding-left: 16px; background: none; }
+  nav .has-sub.open > .sub, nav .has-sub:hover > .sub { display: block; }
+
+  .is-home { padding-top: 0; }
+  .is-home .menu-btn { display: none; }
+  .is-home nav {
+    display: block;
+    top: 0; left: 0; right: auto; bottom: auto;
+    max-width: calc(100% - 32px);
+    padding: 16px 24px 20px 16px;
+    background: rgba(255,255,255,.82);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
+  main { max-width: 720px; margin: 0 auto; padding: 16px 16px 64px; }
+  .txt [style*="text-align:center"] { text-align: left !important; }
+}
