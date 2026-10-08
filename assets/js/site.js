@@ -26,6 +26,11 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && !menu.hidden) setOpen(false);
   });
+  // 메뉴 바깥(어두운 부분)을 탭하면 닫기
+  document.addEventListener('click', function (e) {
+    if (menu.hidden || menu.contains(e.target) || burger.contains(e.target)) return;
+    setOpen(false);
+  });
 
   // 2013-2020 접기/펼치기
   menu.querySelectorAll('.m-chev').forEach(function (chev) {

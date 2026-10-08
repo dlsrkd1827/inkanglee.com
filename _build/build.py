@@ -397,12 +397,23 @@ FOOT = """<script src="assets/js/site.js"></script>
 </html>
 """
 
+def asset_ver(rel):
+    """CSS/JS 내용이 바뀌면 주소가 바뀌어 휴대폰·브라우저가 옛 파일을 쓰지 않게 함"""
+    import hashlib
+    try:
+        return rel + "?v=" + hashlib.md5(open(os.path.join(OUT, rel), "rb").read()).hexdigest()[:8]
+    except OSError:
+        return rel
+
 def write(name, title, desc, body, bodycls="", extra=""):
     path = os.path.join(OUT, name + ".html")
+    head = HEAD.format(title=H.escape(title), desc=H.escape(desc), bodycls=bodycls, extra=extra)
+    head = head.replace('href="assets/css/style.css"', 'href="' + asset_ver("assets/css/style.css") + '"')
+    foot = FOOT.replace('src="assets/js/site.js"', 'src="' + asset_ver("assets/js/site.js") + '"')
     with open(path, "w", encoding="utf8", newline="\n") as f:
-        f.write(HEAD.format(title=H.escape(title), desc=H.escape(desc), bodycls=bodycls, extra=extra))
+        f.write(head)
         f.write(body)
-        f.write(FOOT)
+        f.write(foot)
 
 MENU_BG = ""
 MOBILE_HOME_BG = ""

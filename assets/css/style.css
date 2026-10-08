@@ -228,18 +228,32 @@ main { padding-bottom: 80px; overflow-x: clip; }
   .m-burger span:nth-child(2) { top: 24px; }
   .m-burger span:nth-child(3) { top: 33px; }
 
-  /* 전체 화면 메뉴 */
+  /* 사이드 메뉴: 왼쪽에서 화면의 3/4 만 나오고, 나머지는 어둡게 비침 (바깥 탭하면 닫힘) */
   .m-menu {
     display: block;
     position: fixed;
-    inset: 0;
+    top: 0; bottom: 0; left: 0;
+    width: 240px;
     z-index: 80;
     overflow-y: auto;
     background: #fff;
+    box-shadow: 2px 0 12px rgba(0,0,0,.12);
+    animation: m-slide .22s ease-out;
   }
-  .m-menu-bg {
+  @keyframes m-slide { from { transform: translateX(-100%); } to { transform: none; } }
+  body.m-open::after {
+    content: "";
     position: fixed;
     inset: 0;
+    z-index: 75;
+    background: rgba(0,0,0,.35);
+    animation: m-fade .22s ease-out;
+  }
+  @keyframes m-fade { from { opacity: 0; } to { opacity: 1; } }
+  .m-menu-bg {
+    position: fixed;
+    top: 0; bottom: 0; left: 0;
+    width: 240px;
     background: center / cover no-repeat;
     opacity: .23;
     pointer-events: none;
