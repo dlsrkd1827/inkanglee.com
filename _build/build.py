@@ -45,11 +45,17 @@ ARCHIVE = [
 TAIL = [("reviews", "critic", "Reviews"), ("cv", "cv", "CV"), ("contact", "contact", "Contact")]
 MEMORY = ("memory", "memory", "2013-2020")
 ALL = WORKS + [MEMORY] + ARCHIVE + TAIL
+# 직접 만든 페이지 (Wix 원본 없음): (파일명, 메뉴 라벨). 본문은 _build/custom/<파일명>.html
+CUSTOM = [
+    ("highway-to-hell", "Highway to Hell: 사라질 기계들을 위한 마지막 파티 2026"),
+]
+CUSTOM_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "custom")
 SLUG2FILE = {urllib.parse.unquote(s).lower(): f for f, s, _ in ALL}
 SLUG2FILE[""] = "index"
 
 def local_href(href):
-    m = re.match(r"https?://(?:www\.)?inkanglee\.com/?([^?#]*)(.*)$", href)
+    # 원본 주소(inkanglee.com) 또는 Wix 무료 주소(dlsrkd1827.wixsite.com/leeinkang) -> 사이트 내부 링크
+    m = re.match(r"https?://(?:(?:www\.)?inkanglee\.com|dlsrkd1827\.wixsite\.com/leeinkang)/?([^?#]*)(.*)$", href)
     if not m:
         return href
     slug = urllib.parse.unquote(m.group(1)).strip("/").lower()
@@ -345,6 +351,7 @@ def nav_html(current):
         cur = ' aria-current="page"' if f == current else ""
         return f'<li{extra}><a href="{f}.html"{cur}>{H.escape(label)}</a>'
     items = ['<li class="home"><a href="index.html">LEE IN KANG</a></li>']
+    items += [li(f, l, ' class="wrap"') + "</li>" for f, l in CUSTOM]
     items += [li(f, l) + "</li>" for f, _, l in WORKS]
     sub = "".join(li(f, l) + "</li>" for f, _, l in ARCHIVE)
     open_cls = " open" if current in [a[0] for a in ARCHIVE] + ["memory"] else ""
@@ -360,6 +367,7 @@ def mobile_nav(current):
         return f'<li><a href="{f}.html"{cur}>{H.escape(label)}</a></li>'
     open_ = current in [a[0] for a in ARCHIVE] + ["memory"]
     items = '<li><a href="index.html">LEE IN KANG</a></li>'
+    items += "".join(li(f, l) for f, l in CUSTOM)
     items += "".join(li(f, l) for f, _, l in WORKS)
     items += ('<li class="m-has-sub' + (' open' if open_ else '') + '">'
               '<a href="memory.html"' + (' aria-current="page"' if current == "memory" else '') + '>2013-2020</a>'
@@ -415,6 +423,8 @@ def write(name, title, desc, body, bodycls="", extra=""):
         f.write(body)
         f.write(foot)
 
+TOP_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "top_offsets.json")
+TOP = json.load(open(TOP_FILE, encoding="utf8")) if os.path.exists(TOP_FILE) else {"target": 0, "first_top": {}}
 MENU_BG = ""
 MOBILE_HOME_BG = ""
 
@@ -433,7 +443,23 @@ def build():
           f'<div class="home-bg home-bg-m" style="background-image:url({MOBILE_HOME_BG})"></div>\n'
           + nav_html("index") + "\n" + mobile_nav("index"),
           bodycls="is-home")
+    for name, label in CUSTOM:
+        frag = open(os.path.join(CUSTOM_DIR, name + ".html"), encoding="utf8").read()
+        title = re.sub(r"\s+\d{4}$", "", label)
+        write(name, f"{title} | leeinkang", f"LEE IN KANG 이인강 — {title}",
+              nav_html(name) + "\n" + mobile_nav(name) + f'<main id="main" class="c">\n{frag}\n</main>\n',
+              bodycls=f"page-{name} page-custom")
+        print(name, "custom")
     for name, _, label in ALL:
+        override = os.path.join(CUSTOM_DIR, name + ".html")
+        if os.path.exists(override):
+            # Wix 원본 대신 직접 만든 본문 사용 (예: memory.html — 빈칸 없는 3열 목록)
+            frag = open(override, encoding="utf8").read()
+            write(name, f"{label} | leeinkang", f"LEE IN KANG 이인강 — {label}",
+                  nav_html(name) + "\n" + mobile_nav(name) + f'<main id="main" class="c">\n{frag}\n</main>\n',
+                  bodycls=f"page-{name} page-custom")
+            print(name, "custom override")
+            continue
         pg = Page(name, label)
         main = pg.body()
         mmain, mcss = "", []
@@ -444,6 +470,9 @@ def build():
         title = pg.seo.get("title") or f"{label} | leeinkang"
         if "|" not in title:
             title = f"{title.strip()} | leeinkang"
+        shift = TOP["first_top"].get(name)
+        if shift is not None:  # 첫 요소를 왼쪽 메뉴 첫 작품 줄 높이에 맞춤
+            pg.css.append(f"main.d{{margin-top:{TOP['target'] - shift}px}}")
         extra = ("<style>\n@media (min-width:1340px){\n" + "\n".join(dict.fromkeys(pg.css)) + "\n}\n"
                  + ("@media (max-width:767px){\n" + "\n".join(dict.fromkeys(mcss)) + "\n}\n" if mcss else "")
                  + "</style>\n")
