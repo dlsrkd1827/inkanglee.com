@@ -1,0 +1,13 @@
+{
+ "_note": "Wix 원본 글에 덧붙이는 항목. page 의 글에서 heading 과 같은 줄 바로 아래(맨 위)에 넣음. 위에서부터 순서대로 들어감.",
+ "items": [
+  {"page": "cv", "heading": "퍼포먼스", "year": "2026",
+   "text": "Highway to Hell: 사라질 기계들을 위한 마지막 파티, 2026 아트코리아랩 AI 융합 페스티벌: 〈SENSE THE M.O.M.: AI 시대, 몸의 감각을 다시 묻다〉, 스페이스S50, 서울"},
+  {"page": "cv", "heading": "그룹전", "year": "2026",
+   "text": "<2026 아트코리아랩 AI 융합 페스티벌: 〈SENSE THE M.O.M.: AI 시대, 몸의 감각을 다시 묻다〉>, 스페이스S50, 서울"},
+  {"page": "cv", "heading": "Performance", "year": "2026",
+   "text": "Highway to Hell: A Last Party for the Machines Soon to Disappear, 2026 Arts Korea Lab AI Convergence Festival: 〈SENSE THE M.O.M.: Re-asking the Senses of the Body in the Age of AI〉, Space S50, Seoul, KR"},
+  {"page": "cv", "heading": "Group Exhibition", "year": "2026",
+   "text": "<2026 Arts Korea Lab AI Convergence Festival: 〈SENSE THE M.O.M.: Re-asking the Senses of the Body in the Age of AI〉>, Space S50, Seoul, KR"}
+ ]
+}

@@ -87,6 +87,27 @@ def clean_rich(h):
     h = re.sub(r'href="([^"]+)"', lambda m: 'href="%s"' % H.escape(local_href(H.unescape(m.group(1)))), h)
     return map_fonts(h)
 
+# ---------- Wix 원본 글에 덧붙이는 항목 (text_additions.json) ----------
+ADD_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "text_additions.json")
+ADDITIONS = json.load(open(ADD_FILE, encoding="utf8"))["items"] if os.path.exists(ADD_FILE) else []
+
+def apply_additions(page, h):
+    """heading 과 글자가 같은 문단 바로 다음(=그 목록 맨 위)에, 다음 문단과 같은 모양의 새 줄을 넣는다."""
+    for it in reversed([a for a in ADDITIONS if a["page"] == page]):
+        paras = list(re.finditer(r"<p[^>]*>.*?</p>", h, re.S))
+        for i, m in enumerate(paras[:-1]):
+            text = re.sub(r"<[^>]+>", "", m.group(0)).replace("&nbsp;", " ").strip()
+            if text == it["heading"]:
+                nxt = paras[i + 1]
+                open_tag = re.match(r"<p[^>]*>", nxt.group(0)).group(0)
+                line = (f'{open_tag}<span style="font-weight:bold;">{H.escape(it["year"])} </span>'
+                        f'<span>{H.escape(it["text"], quote=False)}</span></p>\n\n')
+                h = h[:nxt.start()] + line + h[nxt.start():]
+                break
+        else:
+            print("  ! heading not found:", page, it["heading"])
+    return h
+
 # ---------- 다운로드 ----------
 jobs = {}  # url -> local path
 def want(url, rel):
@@ -283,7 +304,7 @@ class Page:
                     self.css.append(f"#{iid}{{background:rgba(var(--color_{bg.group(1)}),{bg.group(2)})}}")
         elif t == "WRichText":
             cls += " txt"
-            inner = clean_rich(p.get("html", ""))
+            inner = apply_additions(self.name, clean_rich(p.get("html", "")))
         elif t == "WPhoto":
             cls += " pic"
             key = (p["uri"], json.dumps(p.get("crop"), sort_keys=True))
