@@ -438,3 +438,23 @@ main.home .strip:hover .cap { color: #000; }
   html #site-nav li.home { margin: 0 auto 0 0; }
   html #site-nav a { line-height: 64px; padding: 0; white-space: nowrap; }
 }
+
+/* =====================================================================
+   메인: 연도별, 한 줄에 2개 (main.c.home .years)
+   ===================================================================== */
+main.home .years { width: 980px; max-width: 100%; margin: 0 auto; }
+main.home .year { margin-bottom: 56px; }
+main.home .year h2 { margin: 0 0 14px; font: 300 15px/1.4 var(--sans); color: var(--nav-muted); letter-spacing: .02em; }
+main.home .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 20px; }
+main.home .tile { display: block; text-decoration: none; color: var(--nav); }
+main.home .tile img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; background: #f2f2f2; transition: opacity .25s; }
+main.home .tile .cap { display: block; margin-top: 9px; font: 300 15px/1.4 var(--sans); transition: color .2s; }
+main.home .tile:hover img { opacity: .85; }
+main.home .tile:hover .cap { color: #000; }
+@media (min-width: 1000px) { main.c.home { padding: 110px 40px 120px; } }
+@media (max-width: 767px) {
+  main.home .year { margin-bottom: 30px; }
+  main.home .year h2 { font-size: 11px; margin-bottom: 8px; }
+  main.home .grid2 { gap: 20px 10px; }
+  main.home .tile .cap { margin-top: 5px; font-size: 10px; }
+}
