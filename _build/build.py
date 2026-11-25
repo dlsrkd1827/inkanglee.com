@@ -459,11 +459,19 @@ def build():
     # 홈
     bg = want("https://static.wixstatic.com/media/39d245_d19da722e3264161a05c61fe3c4d73b9~mv2.jpg/v1/fit/w_2560,h_2560,q_90/file.jpg",
               "assets/img/home-bg.jpg")
-    write("index", "leeinkang 이인강", "LEE IN KANG 이인강 — artist portfolio",
-          f'<div class="home-bg home-bg-d" style="background-image:url({bg})"></div>'
-          f'<div class="home-bg home-bg-m" style="background-image:url({MOBILE_HOME_BG})"></div>\n'
-          + nav_html("index") + "\n" + mobile_nav("index"),
-          bodycls="is-home")
+    home_frag = os.path.join(CUSTOM_DIR, "index.html")
+    if os.path.exists(home_frag):
+        # 메인: 작품별 가로 썸네일 목록 (_build/custom/index.html)
+        write("index", "leeinkang 이인강", "LEE IN KANG 이인강 — artist portfolio",
+                nav_html("index") + "\n" + mobile_nav("index")
+                + '<main id="main" class="c home">\n' + open(home_frag, encoding="utf8").read() + '</main>\n',
+                bodycls="page-index page-custom")
+    else:
+        write("index", "leeinkang 이인강", "LEE IN KANG 이인강 — artist portfolio",
+            f'<div class="home-bg home-bg-d" style="background-image:url({bg})"></div>'
+            f'<div class="home-bg home-bg-m" style="background-image:url({MOBILE_HOME_BG})"></div>\n'
+            + nav_html("index") + "\n" + mobile_nav("index"),
+            bodycls="is-home")
     for name, label in CUSTOM:
         frag = open(os.path.join(CUSTOM_DIR, name + ".html"), encoding="utf8").read()
         title = re.sub(r"\s+\d{4}$", "", label)

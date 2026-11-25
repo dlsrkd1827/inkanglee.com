@@ -395,3 +395,22 @@ main.c .archive a:hover img { opacity: .85; }
   main.c .archive { grid-template-columns: 1fr; gap: 24px; padding: 0 30px; }
   main.c .archive .cap { font-size: 13px; }
 }
+
+/* =====================================================================
+   메인: 작품별 가로 썸네일, 한 줄에 하나씩 (main.c.home)
+   ===================================================================== */
+main.home .strips { width: 980px; max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 46px; }
+main.home .strip { display: block; text-decoration: none; color: var(--nav); }
+main.home .strip img { width: 100%; height: auto; aspect-ratio: 10 / 3; object-fit: cover; background: #f2f2f2; transition: opacity .25s; }
+main.home .strip .cap { display: flex; justify-content: space-between; gap: 16px; margin-top: 9px; font: 300 15px/1.4 var(--sans); transition: color .2s; }
+main.home .strip .y { flex: none; color: var(--nav-muted); }
+main.home .strip:hover img { opacity: .85; }
+main.home .strip:hover .cap { color: #000; }
+@media (min-width: 1000px) and (max-width: 1339px) { main.home .strips { width: auto; gap: 36px; } }
+@media (min-width: 768px) and (max-width: 999px) { main.home .strips { width: auto; gap: 32px; } }
+@media (max-width: 767px) {
+  main.home { padding-top: 60px; }
+  main.home .strips { width: auto; gap: 24px; }
+  main.home .strip img { aspect-ratio: 2 / 1; }
+  main.home .strip .cap { margin-top: 6px; font-size: 11px; }
+}
