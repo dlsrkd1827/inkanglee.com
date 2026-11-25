@@ -401,7 +401,7 @@ main.c .archive a:hover img { opacity: .85; }
    ===================================================================== */
 main.home .strips { width: 980px; max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 46px; }
 main.home .strip { display: block; text-decoration: none; color: var(--nav); }
-main.home .strip img { width: 100%; height: auto; aspect-ratio: 2000 / 824; object-fit: cover; background: #f2f2f2; transition: opacity .25s; }
+main.home .strip img { width: 100%; height: auto; aspect-ratio: 10 / 3; object-fit: cover; background: #f2f2f2; transition: opacity .25s; }
 main.home .strip .cap { display: flex; justify-content: space-between; gap: 16px; margin-top: 9px; font: 300 15px/1.4 var(--sans); transition: color .2s; }
 main.home .strip .y { flex: none; color: var(--nav-muted); }
 main.home .strip:hover img { opacity: .85; }

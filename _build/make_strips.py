@@ -12,20 +12,20 @@ import os, sys
 from PIL import Image, ImageFilter, ImageDraw
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-W, H = 1600, 659  # 2000x824 와 같은 비율 (약 2.43:1)
+W, H = 1600, 480
 
 STRIPS = [
-    # (작품, 원본 사진, mode, 옵션)   _build/strip_src 에는 직접 준비한 사진
-    ("highway-to-hell",    "assets/img/highway-to-hell/08.jpg",      "cover", {"fy": .55}),
-    ("lightgrass-01",      "assets/img/lightgrass-01/11.jpg",        "cover", {"fy": .5}),
-    ("susu-sangseung",     "_build/strip_src/susu-sangseung.jpg",    "cover", {}),
-    ("sensory-relay-01",   "assets/img/sensory-relay-01/01.jpg",     "cover", {"fy": .18}),
-    ("drawing-suit-01-02", "assets/img/drawing-suit-01-02/01.jpg",   "cover", {"fy": .35}),
-    ("performing-suit-02", "assets/img/performing-suit-02/06.jpg",   "solid", {"feather": 24}),
-    ("performing-suit-01", "_build/strip_src/performing-suit-01.jpg", "cover", {}),
-    ("drawing-suit-02",    "assets/img/drawing-suit-02/02.jpg",      "cover", {"fy": .3}),
-    ("drawing-suit-01",    "assets/img/drawing-suit-01/07.jpg",      "cover", {"fy": .3}),
-    ("memory",             "assets/img/undead-weight/02.jpg",        "cover", {}),
+    # (작품, 원본 사진, mode, 옵션)
+    ("highway-to-hell",    "assets/img/highway-to-hell/14.jpg",    "fit",   {"region": 2.0, "fy": .35}),
+    ("lightgrass-01",      "assets/img/lightgrass-01/01.jpg",      "fit",   {}),
+    ("susu-sangseung",     "assets/img/home/susu-sangseung.jpg",   "keep",  {}),
+    ("sensory-relay-01",   "assets/img/sensory-relay-01/01.jpg",   "fit",   {}),
+    ("drawing-suit-01-02", "assets/img/home/drawing-suit-01-02.jpg", "keep", {}),
+    ("performing-suit-02", "assets/img/performing-suit-02/06.jpg", "solid",   {"feather": 24}),
+    ("performing-suit-01", "assets/img/performing-suit-01/01.jpg", "solid",   {}),
+    ("drawing-suit-02",    "assets/img/drawing-suit-02/03.jpg",    "solid",   {}),
+    ("drawing-suit-01",    "assets/img/home/drawing-suit-01.jpg",  "keep",  {}),
+    ("memory",             "assets/img/home/memory.jpg",           "keep",  {}),
 ]
 
 
@@ -119,7 +119,7 @@ def make(entry):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        tw = 800; th = int(tw * H / W)
+        tw, th = 800, 240
         sheet = Image.new("RGB", (tw * 2 + 30, (th + 30) * ((len(STRIPS) + 1) // 2)), "white")
         dr = ImageDraw.Draw(sheet)
         for i, e in enumerate(STRIPS):
@@ -129,6 +129,8 @@ if __name__ == "__main__":
         sheet.save(sys.argv[1], quality=82)
     else:
         for e in STRIPS:
+            if e[2] == "keep":
+                continue
             out = make(e)
             p = os.path.join(ROOT, "assets/img/home", e[0] + ".jpg")
             out.save(p, quality=82, optimize=True, progressive=True)
