@@ -367,28 +367,19 @@ class Page:
         return "\n".join(out)
 
 # ---------- 공통 템플릿 ----------
-SHOW_WORKS_IN_MENU = False
-
 def nav_html(current):
     def li(f, label, extra=""):
         cur = ' aria-current="page"' if f == current else ""
         return f'<li{extra}><a href="{f}.html"{cur}>{H.escape(label)}</a>'
     items = ['<li class="home"><a href="index.html">LEE IN KANG</a></li>']
-    if SHOW_WORKS_IN_MENU:
-        items += [li(f, l, ' class="wrap"') + "</li>" for f, l in CUSTOM]
-        items += [li(f, l) + "</li>" for f, _, l in WORKS]
-        sub = "".join(li(f, l) + "</li>" for f, _, l in ARCHIVE)
-        open_cls = " open" if current in [a[0] for a in ARCHIVE] + ["memory"] else ""
-        items.append(li("memory", "2013-2020", f' class="has-sub{open_cls}"') + f'<ul class="sub">{sub}</ul></li>')
+    items += [li(f, l, ' class="wrap"') + "</li>" for f, l in CUSTOM]
+    items += [li(f, l) + "</li>" for f, _, l in WORKS]
+    sub = "".join(li(f, l) + "</li>" for f, _, l in ARCHIVE)
+    open_cls = " open" if current in [a[0] for a in ARCHIVE] + ["memory"] else ""
+    items.append(li("memory", "2013-2020", f' class="has-sub{open_cls}"') + f'<ul class="sub">{sub}</ul></li>')
     items += [li(f, l) + "</li>" for f, _, l in TAIL]
-    # 프로젝트 페이지마다 뒤로가기: 메인 작품·2013-2020 목록 -> 메인, 2013-2020 안의 작품 -> 2013-2020 목록
-    back = ""
-    if current in [a[0] for a in ARCHIVE]:
-        back = '<a class="back" href="memory.html" aria-label="2013-2020 목록으로"><span aria-hidden="true">←</span> 2013-2020</a>'
-    elif current in [w[0] for w in WORKS] + [c[0] for c in CUSTOM] + ["memory"]:
-        back = '<a class="back" href="index.html" aria-label="메인으로"><span aria-hidden="true">←</span> Works</a>'
     return ('<button class="menu-btn" aria-expanded="false" aria-controls="site-nav">Menu</button>\n'
-            '<nav id="site-nav"><ul>' + "".join(items) + "</ul></nav>" + back)
+            '<nav id="site-nav"><ul>' + "".join(items) + "</ul></nav>")
 
 def mobile_nav(current):
     """원본 Wix 모바일 메뉴: 왼쪽 위 햄버거 -> 전체 화면 메뉴(드로잉 배경 23%), 2013-2020 접기/펼치기."""
@@ -397,14 +388,13 @@ def mobile_nav(current):
         return f'<li><a href="{f}.html"{cur}>{H.escape(label)}</a></li>'
     open_ = current in [a[0] for a in ARCHIVE] + ["memory"]
     items = '<li><a href="index.html">LEE IN KANG</a></li>'
-    if SHOW_WORKS_IN_MENU:
-        items += "".join(li(f, l) for f, l in CUSTOM)
-        items += "".join(li(f, l) for f, _, l in WORKS)
-        items += ('<li class="m-has-sub' + (' open' if open_ else '') + '">'
-                  '<a href="memory.html"' + (' aria-current="page"' if current == "memory" else '') + '>2013-2020</a>'
-                  '<button class="m-chev" aria-label="2013-2020 펼치기" aria-expanded="' + ('true' if open_ else 'false') + '">'
-                  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>'
-                  '</button><ul>' + "".join(li(f, l) for f, _, l in ARCHIVE) + '</ul></li>')
+    items += "".join(li(f, l) for f, l in CUSTOM)
+    items += "".join(li(f, l) for f, _, l in WORKS)
+    items += ('<li class="m-has-sub' + (' open' if open_ else '') + '">'
+              '<a href="memory.html"' + (' aria-current="page"' if current == "memory" else '') + '>2013-2020</a>'
+              '<button class="m-chev" aria-label="2013-2020 펼치기" aria-expanded="' + ('true' if open_ else 'false') + '">'
+              '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>'
+              '</button><ul>' + "".join(li(f, l) for f, _, l in ARCHIVE) + '</ul></li>')
     items += "".join(li(f, l) for f, _, l in TAIL)
     return ('<button class="m-burger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="m-menu"><span></span><span></span><span></span></button>\n'
             '<div class="m-menu" id="m-menu" hidden>'
@@ -469,19 +459,11 @@ def build():
     # 홈
     bg = want("https://static.wixstatic.com/media/39d245_d19da722e3264161a05c61fe3c4d73b9~mv2.jpg/v1/fit/w_2560,h_2560,q_90/file.jpg",
               "assets/img/home-bg.jpg")
-    home_frag = os.path.join(CUSTOM_DIR, "index.html")
-    if os.path.exists(home_frag):
-        # 메인: 작품별 가로 썸네일 목록 (_build/custom/index.html)
-        write("index", "leeinkang 이인강", "LEE IN KANG 이인강 — artist portfolio",
-                nav_html("index") + "\n" + mobile_nav("index")
-                + '<main id="main" class="c home">\n' + open(home_frag, encoding="utf8").read() + '</main>\n',
-                bodycls="page-index page-custom")
-    else:
-        write("index", "leeinkang 이인강", "LEE IN KANG 이인강 — artist portfolio",
-            f'<div class="home-bg home-bg-d" style="background-image:url({bg})"></div>'
-            f'<div class="home-bg home-bg-m" style="background-image:url({MOBILE_HOME_BG})"></div>\n'
-            + nav_html("index") + "\n" + mobile_nav("index"),
-            bodycls="is-home")
+    write("index", "leeinkang 이인강", "LEE IN KANG 이인강 — artist portfolio",
+          f'<div class="home-bg home-bg-d" style="background-image:url({bg})"></div>'
+          f'<div class="home-bg home-bg-m" style="background-image:url({MOBILE_HOME_BG})"></div>\n'
+          + nav_html("index") + "\n" + mobile_nav("index"),
+          bodycls="is-home")
     for name, label in CUSTOM:
         frag = open(os.path.join(CUSTOM_DIR, name + ".html"), encoding="utf8").read()
         title = re.sub(r"\s+\d{4}$", "", label)
@@ -512,7 +494,7 @@ def build():
         shift = TOP["first_top"].get(name)
         if shift is not None:  # 첫 요소를 왼쪽 메뉴 첫 작품 줄 높이에 맞춤
             pg.css.append(f"main.d{{margin-top:{TOP['target'] - shift}px}}")
-        extra = ("<style>\n@media (min-width:1000px){\n" + "\n".join(dict.fromkeys(pg.css)) + "\n}\n"
+        extra = ("<style>\n@media (min-width:1340px){\n" + "\n".join(dict.fromkeys(pg.css)) + "\n}\n"
                  + ("@media (max-width:767px){\n" + "\n".join(dict.fromkeys(mcss)) + "\n}\n" if mcss else "")
                  + "</style>\n")
         body = nav_html(name) + "\n" + mobile_nav(name) + f'<main id="main" class="d">\n{main}\n</main>\n'

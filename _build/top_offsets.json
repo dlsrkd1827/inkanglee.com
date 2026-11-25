@@ -1,6 +1,6 @@
 {
- "_note": "데스크톱(1000px 이상)에서 각 페이지 첫 요소의 원래 높이(px). 모두 target 높이(상단 메뉴줄 아래)로 맞춤",
- "target": 110,
+ "_note": "데스크톱(1340px 이상)에서 각 페이지 첫 요소의 원래 높이(px). 모두 target 높이(왼쪽 메뉴 첫 작품 줄)로 맞춤",
+ "target": 85,
  "first_top": {
   "lightgrass-01": 192,
   "susu-sangseung": 192,

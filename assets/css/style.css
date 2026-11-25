@@ -115,18 +115,18 @@ main { padding-bottom: 80px; overflow-x: clip; }
 .links img { width: 30px; height: 30px; }
 
 /* ① 원본 데스크톱 그리드 */
-@media (min-width: 1000px) {
+@media (min-width: 1340px) {
   main.d {
     padding-top: 18px;
     /* 그리드 왼쪽 = (화면폭 + padding - 980) / 2 ≥ 340px */
-    padding-left: 0;
+    padding-left: max(0px, calc(1660px - 100vw));
   }
   main.d .mesh { display: grid; }
   main.d .cell { position: relative; }
 }
 
 /* ②③ 한 줄 흐름 레이아웃 */
-@media (min-width: 768px) and (max-width: 999px) {
+@media (min-width: 768px) and (max-width: 1339px) {
   main.d .wedge, main.d .vec { display: none; }
   main.d .mesh { display: flex; flex-direction: column; gap: 16px; }
   main.d .cell { width: auto !important; height: auto !important; }
@@ -138,9 +138,9 @@ main { padding-bottom: 80px; overflow-x: clip; }
 }
 
 /* ② 노트북·작은 모니터 */
-@media (min-width: 1000px) and (max-width: 999px) { /* (사용 안 함: 상단 메뉴줄로 바뀌어 노트북도 원본 배치) */
+@media (min-width: 1000px) and (max-width: 1339px) {
   main.d {
-    margin-left: 200px;
+    margin-left: 340px;
     max-width: 760px;
     padding: 85px 40px 80px 0;
   }
@@ -190,7 +190,7 @@ main { padding-bottom: 80px; overflow-x: clip; }
     backdrop-filter: blur(6px);
   }
 
-  main.d { max-width: 720px; margin: 0 auto; padding: 96px 16px 64px; }
+  main.d { max-width: 720px; margin: 0 auto; padding: 16px 16px 64px; }
   main.d .txt [style*="text-align:center"] { text-align: left !important; }
 }
 
@@ -334,7 +334,7 @@ main { padding-bottom: 80px; overflow-x: clip; }
    가운데 721px 한 줄에 영상·사진을 넓은 간격으로.
    ===================================================================== */
 #site-nav li.wrap > a { white-space: normal; word-break: keep-all; max-width: 270px; line-height: 20px; padding: 7.5px 0; }
-main.c { display: block; padding: 110px 0 120px; color: rgb(var(--color_15)); }  /* 상단 메뉴줄 아래 */
+main.c { display: block; padding: 85px 0 120px; color: rgb(var(--color_15)); }  /* 첫 줄 = 왼쪽 메뉴 첫 작품 높이 */
 main.c .work { width: 721px; max-width: 100%; margin: 0 auto; }
 main.c .work-title { margin: 0 0 80px; text-align: center; font: 400 26px/1.4 var(--sans); }
 main.c figure { margin: 0; }
@@ -365,18 +365,18 @@ main.c .archive img { width: 100%; height: auto; transition: opacity .2s; }
 main.c .archive a:hover img { opacity: .85; }
 
 /* ① 큰 모니터: 다른 작품 페이지처럼 왼쪽 메뉴와 안 겹치게 가운데 정렬 */
-@media (min-width: 1000px) {
-  main.c { padding-left: 0; }
+@media (min-width: 1340px) {
+  main.c { padding-left: max(0px, calc(1660px - 100vw)); }
 }
 /* ② 노트북 */
-@media (min-width: 1000px) and (max-width: 999px) { /* (사용 안 함: 상단 메뉴줄로 바뀌어 노트북도 원본 배치) */
-  main.c { margin-left: 200px; max-width: 760px; padding: 85px 40px 80px 0; }
+@media (min-width: 1000px) and (max-width: 1339px) {
+  main.c { margin-left: 340px; max-width: 760px; padding: 85px 40px 80px 0; }
   main.c .work, main.c .archive { width: auto; }
   main.c .archive { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; }
 }
 /* ③ 태블릿 */
 @media (min-width: 768px) and (max-width: 999px) {
-  main.c { max-width: 720px; margin: 0 auto; padding: 96px 16px 64px; }
+  main.c { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; }
   main.c .work, main.c .archive { width: auto; }
   main.c .archive { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; }
 }
@@ -394,81 +394,4 @@ main.c .archive a:hover img { opacity: .85; }
   .page-memory main.c { padding-top: 60px; }
   main.c .archive { grid-template-columns: 1fr; gap: 24px; padding: 0 30px; }
   main.c .archive .cap { font-size: 13px; }
-}
-
-/* =====================================================================
-   메인: 작품별 가로 썸네일, 한 줄에 하나씩 (main.c.home)
-   ===================================================================== */
-main.home .strips { width: 980px; max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 46px; }
-main.home .strip { display: block; text-decoration: none; color: var(--nav); }
-main.home .strip img { width: 100%; height: auto; aspect-ratio: 10 / 3; object-fit: cover; background: #f2f2f2; transition: opacity .25s; }
-main.home .strip .cap { display: flex; justify-content: space-between; gap: 16px; margin-top: 9px; font: 300 15px/1.4 var(--sans); transition: color .2s; }
-main.home .strip .y { flex: none; color: var(--nav-muted); }
-main.home .strip:hover img { opacity: .85; }
-main.home .strip:hover .cap { color: #000; }
-@media (min-width: 1000px) and (max-width: 999px) { /* (사용 안 함: 상단 메뉴줄로 바뀌어 노트북도 원본 배치) */ main.home .strips { width: auto; gap: 36px; } }
-@media (min-width: 768px) and (max-width: 999px) { main.home .strips { width: auto; gap: 32px; } }
-@media (max-width: 767px) {
-  main.home { padding-top: 60px; }
-  main.home .strips { width: auto; gap: 24px; }
-  main.home .strip img { aspect-ratio: 2 / 1; }
-  main.home .strip .cap { margin-top: 6px; font-size: 11px; }
-}
-
-/* 메뉴가 짧아져서(LEE IN KANG / Reviews / CV / Contact) 메인 썸네일을 넓게 */
-@media (min-width: 1000px) {
-  main.c.home { margin-left: 0; max-width: none; padding: 110px 40px 120px; }
-  main.home .strips { width: auto; max-width: 1170px; margin: 0 auto; gap: 52px; }
-}
-
-/* =====================================================================
-   상단 메뉴줄 (768px 이상): 왼쪽 LEE IN KANG, 오른쪽 Reviews · CV · Contact
-   ===================================================================== */
-@media (min-width: 768px) {
-  body { padding-top: 0; }
-  .menu-btn { display: none !important; }
-  html #site-nav {
-    display: block;
-    position: fixed; top: 0; left: 0; right: 0; bottom: auto;
-    height: 64px; padding: 0 40px;
-    background: rgba(255,255,255,.96);
-    z-index: 50;
-  }
-  html #site-nav ul { display: flex; align-items: center; gap: 30px; height: 64px; }
-  html #site-nav li.home { margin: 0 auto 0 0; }
-  html #site-nav a { line-height: 64px; padding: 0; white-space: nowrap; }
-}
-
-/* =====================================================================
-   메인: 연도별, 한 줄에 2개 (main.c.home .years)
-   ===================================================================== */
-main.home .years { width: 980px; max-width: 100%; margin: 0 auto; }
-main.home .year { margin-bottom: 56px; }
-main.home .year h2 { margin: 0 0 14px; font: 300 15px/1.4 var(--sans); color: var(--nav-muted); letter-spacing: .02em; }
-main.home .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 20px; }
-main.home .tile { display: block; text-decoration: none; color: var(--nav); }
-main.home .tile img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; background: #f2f2f2; transition: opacity .25s; }
-main.home .tile .cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 9px; font: 300 15px/1.4 var(--sans); transition: color .2s; }
-main.home .tile .y { flex: none; color: var(--nav-muted); }
-main.home .tile:hover img { opacity: .85; }
-main.home .tile:hover .cap { color: #000; }
-@media (min-width: 1000px) { main.c.home { padding: 110px 40px 120px; } }
-@media (max-width: 767px) {
-  main.home .year { margin-bottom: 30px; }
-  main.home .year h2 { font-size: 11px; margin-bottom: 8px; }
-  main.home .grid2 { gap: 20px 10px; }
-  main.home .tile .cap { margin-top: 5px; font-size: 10px; }
-}
-
-/* 프로젝트 페이지 뒤로가기 (메뉴줄 아래 왼쪽에 고정) */
-.back {
-  position: fixed; top: 76px; left: 40px; z-index: 45;
-  font: 300 15px/1.4 var(--sans); color: var(--nav); text-decoration: none;
-  background: rgba(255,255,255,.9); padding: 2px 6px 2px 0;
-  transition: color .2s;
-}
-.back:hover { color: #000; }
-@media (min-width: 768px) and (max-width: 999px) { .back { top: 72px; left: 16px; } }
-@media (max-width: 767px) {
-  .back { top: 20px; left: auto; right: 12px; z-index: 70; padding: 4px 6px; font-size: 11px; background: rgba(255,255,255,.8); }
 }
