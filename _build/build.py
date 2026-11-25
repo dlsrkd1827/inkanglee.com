@@ -506,7 +506,7 @@ def build():
         shift = TOP["first_top"].get(name)
         if shift is not None:  # 첫 요소를 왼쪽 메뉴 첫 작품 줄 높이에 맞춤
             pg.css.append(f"main.d{{margin-top:{TOP['target'] - shift}px}}")
-        extra = ("<style>\n@media (min-width:1340px){\n" + "\n".join(dict.fromkeys(pg.css)) + "\n}\n"
+        extra = ("<style>\n@media (min-width:1000px){\n" + "\n".join(dict.fromkeys(pg.css)) + "\n}\n"
                  + ("@media (max-width:767px){\n" + "\n".join(dict.fromkeys(mcss)) + "\n}\n" if mcss else "")
                  + "</style>\n")
         body = nav_html(name) + "\n" + mobile_nav(name) + f'<main id="main" class="d">\n{main}\n</main>\n'
