@@ -119,7 +119,7 @@ main { padding-bottom: 80px; overflow-x: clip; }
   main.d {
     padding-top: 18px;
     /* 그리드 왼쪽 = (화면폭 + padding - 980) / 2 ≥ 340px */
-    padding-left: max(0px, calc(1660px - 100vw));
+    padding-left: max(0px, calc(1380px - 100vw));
   }
   main.d .mesh { display: grid; }
   main.d .cell { position: relative; }
@@ -140,7 +140,7 @@ main { padding-bottom: 80px; overflow-x: clip; }
 /* ② 노트북·작은 모니터 */
 @media (min-width: 1000px) and (max-width: 1339px) {
   main.d {
-    margin-left: 340px;
+    margin-left: 200px;
     max-width: 760px;
     padding: 85px 40px 80px 0;
   }
@@ -366,11 +366,11 @@ main.c .archive a:hover img { opacity: .85; }
 
 /* ① 큰 모니터: 다른 작품 페이지처럼 왼쪽 메뉴와 안 겹치게 가운데 정렬 */
 @media (min-width: 1340px) {
-  main.c { padding-left: max(0px, calc(1660px - 100vw)); }
+  main.c { padding-left: max(0px, calc(1380px - 100vw)); }
 }
 /* ② 노트북 */
 @media (min-width: 1000px) and (max-width: 1339px) {
-  main.c { margin-left: 340px; max-width: 760px; padding: 85px 40px 80px 0; }
+  main.c { margin-left: 200px; max-width: 760px; padding: 85px 40px 80px 0; }
   main.c .work, main.c .archive { width: auto; }
   main.c .archive { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; }
 }
@@ -413,4 +413,10 @@ main.home .strip:hover .cap { color: #000; }
   main.home .strips { width: auto; gap: 24px; }
   main.home .strip img { aspect-ratio: 2 / 1; }
   main.home .strip .cap { margin-top: 6px; font-size: 11px; }
+}
+
+/* 메뉴가 짧아져서(LEE IN KANG / Reviews / CV / Contact) 메인 썸네일을 넓게 */
+@media (min-width: 1000px) {
+  main.c.home { margin-left: 0; max-width: none; padding: 85px 56px 120px 200px; }
+  main.home .strips { width: auto; max-width: 1500px; margin: 0; gap: 52px; }
 }

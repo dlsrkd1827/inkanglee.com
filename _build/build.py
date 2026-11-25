@@ -367,16 +367,19 @@ class Page:
         return "\n".join(out)
 
 # ---------- 공통 템플릿 ----------
+SHOW_WORKS_IN_MENU = False
+
 def nav_html(current):
     def li(f, label, extra=""):
         cur = ' aria-current="page"' if f == current else ""
         return f'<li{extra}><a href="{f}.html"{cur}>{H.escape(label)}</a>'
     items = ['<li class="home"><a href="index.html">LEE IN KANG</a></li>']
-    items += [li(f, l, ' class="wrap"') + "</li>" for f, l in CUSTOM]
-    items += [li(f, l) + "</li>" for f, _, l in WORKS]
-    sub = "".join(li(f, l) + "</li>" for f, _, l in ARCHIVE)
-    open_cls = " open" if current in [a[0] for a in ARCHIVE] + ["memory"] else ""
-    items.append(li("memory", "2013-2020", f' class="has-sub{open_cls}"') + f'<ul class="sub">{sub}</ul></li>')
+    if SHOW_WORKS_IN_MENU:
+        items += [li(f, l, ' class="wrap"') + "</li>" for f, l in CUSTOM]
+        items += [li(f, l) + "</li>" for f, _, l in WORKS]
+        sub = "".join(li(f, l) + "</li>" for f, _, l in ARCHIVE)
+        open_cls = " open" if current in [a[0] for a in ARCHIVE] + ["memory"] else ""
+        items.append(li("memory", "2013-2020", f' class="has-sub{open_cls}"') + f'<ul class="sub">{sub}</ul></li>')
     items += [li(f, l) + "</li>" for f, _, l in TAIL]
     return ('<button class="menu-btn" aria-expanded="false" aria-controls="site-nav">Menu</button>\n'
             '<nav id="site-nav"><ul>' + "".join(items) + "</ul></nav>")
@@ -388,13 +391,14 @@ def mobile_nav(current):
         return f'<li><a href="{f}.html"{cur}>{H.escape(label)}</a></li>'
     open_ = current in [a[0] for a in ARCHIVE] + ["memory"]
     items = '<li><a href="index.html">LEE IN KANG</a></li>'
-    items += "".join(li(f, l) for f, l in CUSTOM)
-    items += "".join(li(f, l) for f, _, l in WORKS)
-    items += ('<li class="m-has-sub' + (' open' if open_ else '') + '">'
-              '<a href="memory.html"' + (' aria-current="page"' if current == "memory" else '') + '>2013-2020</a>'
-              '<button class="m-chev" aria-label="2013-2020 펼치기" aria-expanded="' + ('true' if open_ else 'false') + '">'
-              '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>'
-              '</button><ul>' + "".join(li(f, l) for f, _, l in ARCHIVE) + '</ul></li>')
+    if SHOW_WORKS_IN_MENU:
+        items += "".join(li(f, l) for f, l in CUSTOM)
+        items += "".join(li(f, l) for f, _, l in WORKS)
+        items += ('<li class="m-has-sub' + (' open' if open_ else '') + '">'
+                  '<a href="memory.html"' + (' aria-current="page"' if current == "memory" else '') + '>2013-2020</a>'
+                  '<button class="m-chev" aria-label="2013-2020 펼치기" aria-expanded="' + ('true' if open_ else 'false') + '">'
+                  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>'
+                  '</button><ul>' + "".join(li(f, l) for f, _, l in ARCHIVE) + '</ul></li>')
     items += "".join(li(f, l) for f, _, l in TAIL)
     return ('<button class="m-burger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="m-menu"><span></span><span></span><span></span></button>\n'
             '<div class="m-menu" id="m-menu" hidden>'
