@@ -381,8 +381,14 @@ def nav_html(current):
         open_cls = " open" if current in [a[0] for a in ARCHIVE] + ["memory"] else ""
         items.append(li("memory", "2013-2020", f' class="has-sub{open_cls}"') + f'<ul class="sub">{sub}</ul></li>')
     items += [li(f, l) + "</li>" for f, _, l in TAIL]
+    # 프로젝트 페이지마다 뒤로가기: 메인 작품·2013-2020 목록 -> 메인, 2013-2020 안의 작품 -> 2013-2020 목록
+    back = ""
+    if current in [a[0] for a in ARCHIVE]:
+        back = '<a class="back" href="memory.html" aria-label="2013-2020 목록으로"><span aria-hidden="true">←</span> 2013-2020</a>'
+    elif current in [w[0] for w in WORKS] + [c[0] for c in CUSTOM] + ["memory"]:
+        back = '<a class="back" href="index.html" aria-label="메인으로"><span aria-hidden="true">←</span> Works</a>'
     return ('<button class="menu-btn" aria-expanded="false" aria-controls="site-nav">Menu</button>\n'
-            '<nav id="site-nav"><ul>' + "".join(items) + "</ul></nav>")
+            '<nav id="site-nav"><ul>' + "".join(items) + "</ul></nav>" + back)
 
 def mobile_nav(current):
     """원본 Wix 모바일 메뉴: 왼쪽 위 햄버거 -> 전체 화면 메뉴(드로잉 배경 23%), 2013-2020 접기/펼치기."""
