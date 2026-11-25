@@ -448,7 +448,8 @@ main.home .year h2 { margin: 0 0 14px; font: 300 15px/1.4 var(--sans); color: va
 main.home .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 20px; }
 main.home .tile { display: block; text-decoration: none; color: var(--nav); }
 main.home .tile img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; background: #f2f2f2; transition: opacity .25s; }
-main.home .tile .cap { display: block; margin-top: 9px; font: 300 15px/1.4 var(--sans); transition: color .2s; }
+main.home .tile .cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 9px; font: 300 15px/1.4 var(--sans); transition: color .2s; }
+main.home .tile .y { flex: none; color: var(--nav-muted); }
 main.home .tile:hover img { opacity: .85; }
 main.home .tile:hover .cap { color: #000; }
 @media (min-width: 1000px) { main.c.home { padding: 110px 40px 120px; } }
